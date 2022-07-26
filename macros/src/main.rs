@@ -56,6 +56,11 @@ macro_rules! get_info {
             fn get_size(name: &str) {
                 
             }
+
+            fn get_types() -> Vec<String>{
+                let tuple = ($($(stringify!($ftype).to_string(), ) *) *);
+                tuple.to_vec()
+            }
         }
     }
 }
@@ -81,4 +86,7 @@ fn main() {
     println!("argumets = {:?}", argumets);
 
     Actions::get_size("CreateMe");
+
+    let types = Actions::get_types();
+    println!("types = {:?}", types);
 }
