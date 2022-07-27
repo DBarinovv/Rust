@@ -1,5 +1,4 @@
 use tuple_conv::*;
-use core::mem::size_of;
 
 macro_rules! create_function {
     ($name:ident, $($args:ident), *) => {
@@ -54,8 +53,9 @@ macro_rules! get_info {
                 res.to_vec()
             }
 
-            fn get_size() -> usize {
-                ($crate::count![@COUNT; $($($fname), *), *])
+            fn get_size(index: usize) -> usize {
+                let tuple = ($($crate::count![@COUNT; $($fname), *]), *);
+                tuple.to_vec()[index]
             }
 
             fn get_types() -> Vec<String>{
@@ -95,7 +95,7 @@ fn main() {
     let argumets = Actions::get_arguments(0, 2);
     println!("argumets = {:?}", argumets);
 
-    let size = Actions::get_size();
+    let size = Actions::get_size(0);
     println!("Size = {:?}", size);
 
     let types = Actions::get_types();
