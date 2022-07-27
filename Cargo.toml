@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+    "procedure_macros",
+    "proc_macro_impl",
+]

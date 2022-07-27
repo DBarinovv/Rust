@@ -1,0 +1,1 @@
+/mnt/c/Users/96533/Desktop/test/Rust/target/debug/libprocedure_macros.so: /mnt/c/Users/96533/Desktop/test/Rust/proc_macro_impl/src/lib.rs /mnt/c/Users/96533/Desktop/test/Rust/procedure_macros/src/lib.rs
