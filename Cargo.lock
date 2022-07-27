@@ -5,9 +5,6 @@ version = 3
 [[package]]
 name = "macros"
 version = "0.1.0"
-dependencies = [
- "tuple-conv",
-]
 
 [[package]]
 name = "proc_macro_impl"
@@ -19,9 +16,3 @@ version = "0.1.0"
 dependencies = [
  "proc_macro_impl",
 ]
-
-[[package]]
-name = "tuple-conv"
-version = "1.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1fd6314683350324c1bb3d71a65fbeacb4e870cb4faf30b28d8a7787fb8116dd"

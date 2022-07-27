@@ -1,5 +1,3 @@
-use tuple_conv::*;
-
 macro_rules! create_function {
     ($name:ident, $($args:ident), *) => {
         // let res = self.send(
@@ -54,8 +52,9 @@ macro_rules! get_info {
             }
 
             fn get_size(index: usize) -> usize {
-                let tuple = ($($crate::count![@COUNT; $($var_name), *]), *);
-                tuple.to_vec()[index]
+                let mut res = Vec::new();
+                $(res.append(&mut vec![$crate::count![@COUNT; $($var_name), *]]);)*
+                res[index]
             }
 
             fn get_types() -> Vec<String> {
