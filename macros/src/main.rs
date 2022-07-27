@@ -30,6 +30,7 @@ macro_rules! create_function {
     };
 }
 
+#[macro_export]
 macro_rules! get_info {
     ($enum_vis:vis enum $enum_name:ident { $( $(patt:meta)? $field_name:ident { $($fname:ident: $ftype:ty $(,)?)* } ,)* }) => {
         $enum_vis enum $enum_name { 
@@ -53,8 +54,8 @@ macro_rules! get_info {
                 res.to_vec()
             }
 
-            fn get_size(name: &str) {
-                
+            fn get_size() -> usize {
+                ($crate::count![@COUNT; $($($fname), *), *])
             }
 
             fn get_types() -> Vec<String>{
@@ -62,7 +63,16 @@ macro_rules! get_info {
                 tuple.to_vec()
             }
         }
-    }
+    };
+}
+
+#[macro_export]
+#[doc(hidden)]
+macro_rules! count {
+    (@COUNT; $($element:ident),*) => {
+        <[()]>::len(&[$($crate::count![@SUBST; $element]),*])
+    };
+    (@SUBST; $_element:ident) => { () };
 }
 
 get_info! {
@@ -85,7 +95,8 @@ fn main() {
     let argumets = Actions::get_arguments(0, 2);
     println!("argumets = {:?}", argumets);
 
-    Actions::get_size("CreateMe");
+    let size = Actions::get_size();
+    println!("Size = {:?}", size);
 
     let types = Actions::get_types();
     println!("types = {:?}", types);
