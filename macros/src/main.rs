@@ -31,10 +31,10 @@ macro_rules! create_function {
 
 #[macro_export]
 macro_rules! get_info {
-    ($enum_vis:vis enum $enum_name:ident { $( $(patt:meta)? $field_name:ident { $($fname:ident: $ftype:ty $(,)?)* } ,)* }) => {
+    ($enum_vis:vis enum $enum_name:ident { $( $(patt:meta)? $field_name:ident { $($var_name:ident: $var_type:ty $(,)?)* } ,)* }) => {
         $enum_vis enum $enum_name { 
             $( $field_name { 
-                $($fname: $ftype,)* 
+                $($var_name: $var_type,)* 
             }, )* 
         }
         impl $enum_name {
@@ -47,20 +47,21 @@ macro_rules! get_info {
                 Self::get_fields()[index].clone()
             }
 
-            fn get_arguments(start_ind: usize, end_ind: usize) -> Vec<String>{
-                let tuple = ($($(stringify!($fname).to_string(), ) *) *);
-                let res = &tuple.to_vec()[start_ind..end_ind];
-                res.to_vec()
+            fn get_arguments(start_ind: usize, end_ind: usize) -> Vec<String> { 
+                let mut res = Vec::new();
+                $(res.append(&mut vec![$(stringify!($var_name).to_string()), *]);)*
+                (&res[start_ind..end_ind]).to_vec()
             }
 
             fn get_size(index: usize) -> usize {
-                let tuple = ($($crate::count![@COUNT; $($fname), *]), *);
+                let tuple = ($($crate::count![@COUNT; $($var_name), *]), *);
                 tuple.to_vec()[index]
             }
 
-            fn get_types() -> Vec<String>{
-                let tuple = ($($(stringify!($ftype).to_string(), ) *) *);
-                tuple.to_vec()
+            fn get_types() -> Vec<String> {
+                let mut res = Vec::new();
+                $(res.append(&mut vec![$(stringify!($var_type).to_string()), *]);)*
+                res
             }
         }
     };
