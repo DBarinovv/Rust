@@ -1,3 +1,8 @@
+#![allow(dead_code, unused)]
+
+extern crate proc_macro_impl;
+use proc_macro_impl::make_function;
+
 macro_rules! create_function {
     ($name:ident, $($args:ident), *) => {
         // let res = self.send(
@@ -36,31 +41,35 @@ macro_rules! get_info {
             }, )* 
         }
         impl $enum_name {
-            fn get_fields() -> Vec<String> {
-                vec![$(stringify!($field_name).to_string(), ) *]
-            }
-
-            fn get_field(index: usize) -> String
+            fn get_fields(index: usize) -> String
             {
-                Self::get_fields()[index].clone()
+                const SIZE: usize = $crate::count![@COUNT; $($field_name), *];
+
+                let mut res = Vec::with_capacity(SIZE);
+                $(res.push(stringify!($field_name).to_string());)*
+                res[index].clone()
             }
 
-            fn get_arguments(start_ind: usize, end_ind: usize) -> Vec<String> { 
-                let mut res = Vec::new();
-                $(res.append(&mut vec![$(stringify!($var_name).to_string()), *]);)*
-                (&res[start_ind..end_ind]).to_vec()
+            fn get_arguments(index: usize) -> Vec<String> { 
+                const SIZE: usize = $crate::count![@COUNT; $($field_name), *];
+
+                let mut res = Vec::with_capacity(SIZE);
+                $(res.push(vec![$(stringify!($var_name).to_string()), *]);)*
+                res[index].clone()
             }
 
-            fn get_size(index: usize) -> usize {
-                let mut res = Vec::new();
-                $(res.append(&mut vec![$crate::count![@COUNT; $($var_name), *]]);)*
-                res[index]
-            }
+            // fn get_size(index: usize) -> usize {
+            //     let mut res = Vec::new();
+            //     $(res.push($crate::count![@COUNT; $($var_name), *]);)*
+            //     res[index]
+            // }
 
-            fn get_types() -> Vec<String> {
-                let mut res = Vec::new();
-                $(res.append(&mut vec![$(stringify!($var_type).to_string()), *]);)*
-                res
+            fn get_types(index: usize) -> Vec<String> {
+                const SIZE: usize = $crate::count![@COUNT; $($field_name), *];
+
+                let mut res = Vec::with_capacity(SIZE);
+                $(res.push(vec![$(stringify!($var_type).to_string()), *]);)*
+                res[index].clone()
             }
         }
     };
@@ -69,11 +78,15 @@ macro_rules! get_info {
 #[macro_export]
 #[doc(hidden)]
 macro_rules! count {
-    (@COUNT; $($element:ident),*) => {
-        <[()]>::len(&[$($crate::count![@SUBST; $element]),*])
+    (@COUNT; $($element:ident), *) => {
+        <[()]>::len(&[$($crate::count![@SUBST; $element]), *])
     };
+
     (@SUBST; $_element:ident) => { () };
 }
+
+// make_function!("x: u128, a: String, b: f32");
+make_function!();
 
 get_info! {
 enum Actions {
@@ -89,15 +102,20 @@ enum Actions {
 }
 
 fn main() {
-    let fields = Actions::get_field(1);
+    let res = answer();
+    println!("res = {:?}", res);
+
+    let index = 0;
+    
+    let fields = Actions::get_fields(index);
     println!("fields = {:?}", fields);
 
-    let argumets = Actions::get_arguments(0, 2);
+    let argumets = Actions::get_arguments(index);
     println!("argumets = {:?}", argumets);
 
-    let size = Actions::get_size(0);
-    println!("Size = {:?}", size);
+    // let size = Actions::get_size(index);
+    // println!("Size = {:?}", size);
 
-    let types = Actions::get_types();
+    let types = Actions::get_types(index);
     println!("types = {:?}", types);
 }
