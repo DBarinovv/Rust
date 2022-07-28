@@ -58,12 +58,6 @@ macro_rules! get_info {
                 res[index].clone()
             }
 
-            // fn get_size(index: usize) -> usize {
-            //     let mut res = Vec::new();
-            //     $(res.push($crate::count![@COUNT; $($var_name), *]);)*
-            //     res[index]
-            // }
-
             fn get_types(index: usize) -> Vec<String> {
                 const SIZE: usize = $crate::count![@COUNT; $($field_name), *];
 
@@ -71,6 +65,10 @@ macro_rules! get_info {
                 $(res.push(vec![$(stringify!($var_type).to_string()), *]);)*
                 res[index].clone()
             }
+
+            // pub fn get_params(index: usize) -> String {
+
+            // }
         }
     };
 }
@@ -112,9 +110,6 @@ fn main() {
 
     let argumets = Actions::get_arguments(index);
     println!("argumets = {:?}", argumets);
-
-    // let size = Actions::get_size(index);
-    // println!("Size = {:?}", size);
 
     let types = Actions::get_types(index);
     println!("types = {:?}", types);
