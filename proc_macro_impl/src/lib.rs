@@ -1,12 +1,15 @@
 extern crate proc_macro;
 use proc_macro::TokenStream;
-use syn::{parse_macro_input, DeriveInput};
 
 #[proc_macro]
-pub fn make_function(item: TokenStream) -> TokenStream {
-    // println!("\n\nITEM: {:?} \n\n", item.to_string());
-    // let input = parse_macro_input!(item as DeriveInput);
-    // let ast = syn::parse(item).unwrap();
-    // println!("Input = {:?}", input.ident);
-    "fn answer() -> u32 { 42 }".parse().unwrap()
+pub fn make_params(item: TokenStream) -> TokenStream {
+    let mut res_func = "fn answer(".to_owned();
+    let end_func = ") -> u32 { 42 }";
+
+    let mut arguments = item.to_string();
+    arguments = arguments[1..arguments.len() - 1].to_string();
+
+    res_func.push_str(&arguments);
+    res_func.push_str(end_func);
+    res_func.parse().unwrap()
 }

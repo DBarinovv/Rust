@@ -1,7 +1,7 @@
 #![allow(dead_code, unused)]
 
 extern crate proc_macro_impl;
-use proc_macro_impl::make_function;
+use proc_macro_impl::make_params;
 
 macro_rules! create_function {
     ($name:ident, $($args:ident), *) => {
@@ -66,9 +66,18 @@ macro_rules! get_info {
                 res[index].clone()
             }
 
-            // pub fn get_params(index: usize) -> String {
+            pub fn get_params(index: usize) -> String {
+                let mut res = "".to_owned();
+                let args = Self::get_arguments(index);
+                let types = Self::get_types(index);
 
-            // }
+                for ind in 0..args.len() {
+                    res.push_str(&args[ind]);
+                    res.push_str(&types[ind]);
+                }
+
+                res
+            }
         }
     };
 }
@@ -83,8 +92,7 @@ macro_rules! count {
     (@SUBST; $_element:ident) => { () };
 }
 
-// make_function!("x: u128, a: String, b: f32");
-make_function!();
+make_params!("x: u128, a: String, b: f32");
 
 get_info! {
 enum Actions {
@@ -100,7 +108,7 @@ enum Actions {
 }
 
 fn main() {
-    let res = answer();
+    let res = answer(0, "AA".to_string(), 1.0);
     println!("res = {:?}", res);
 
     let index = 0;
