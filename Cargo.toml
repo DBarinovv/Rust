@@ -1,6 +1,7 @@
 [workspace]
 
 members = [
+    "compile_actor_id",
     "macros",
     "procedure_macros",
     "proc_macro_impl",
