@@ -2,6 +2,7 @@
 
 members = [
     "compile_actor_id",
+    "fuzz_test",
     "macros",
     "procedure_macros",
     "proc_macro_impl",
